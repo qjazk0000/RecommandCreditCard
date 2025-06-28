@@ -1,0 +1,56 @@
+{
+  "card_id": 2148,
+  "card_url": "https://www.card-gorilla.com/card/detail/2148",
+  "card_name": "KCTV알뜰카드",
+  "issuer": "제주은행",
+  "inactive": false,
+  "brands": [
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 5,000원",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "기타",
+      "summary": "KCTV 방송요금 자동이체시 5천원 ~ 7천원 청구 할인 이동통신요금 자동이체시 1천원 청구 할인",
+      "details": [
+        "KCTV 방송요금 자동이체시 5천원 ~ 7천원 청구 할인",
+        "할인한도",
+        "* 전월실적 30만원 이상 : 5천원",
+        "* 전월실적 50만원 이상 : 7천원"
+      ]
+    },
+    {
+      "type": "영화",
+      "summary": "영화관 최대 3천원 청구 할인",
+      "details": []
+    },
+    {
+      "type": "온라인쇼핑",
+      "summary": "온라인쇼핑몰 5% 청구 할인",
+      "details": []
+    },
+    {
+      "type": "카페",
+      "summary": "주요 커피 전문점 20% 청구할인",
+      "details": []
+    },
+    {
+      "type": "기타",
+      "summary": "자동화기기, 전자금융(인터넷뱅킹, 텔레뱅킹, 모바일뱅킹) 이용수수료 면제 외환 수수료 감면",
+      "details": []
+    }
+  ],
+  "caution": [
+    "방송요금 할인을 제외한 할인서비스는 통합 월 할인한도로 적용됩니다.",
+    "통합할인한도",
+    "* 전월실적 30만원 이상 : 5천원",
+    "* 전월실적 50만원 이상 : 7천원",
+    "* 전월실적 100만원 이상: 1만원",
+    "<서비스 제공 조건 안내>"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "card_id": 1998,
+  "card_url": "https://www.card-gorilla.com/card/detail/1998",
+  "card_name": "NH올원 NH저축은행카드",
+  "issuer": "NH농협카드",
+  "inactive": false,
+  "brands": [
+    "Mastercard"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 8,000원",
+    "international": "해외겸용 10,000원"
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "적립",
+      "summary": "전월실적에 상관없이 0.7 ~ 0.9% 적립",
+      "details": [
+        "전월실적에 상관없이 0.7 ~ 0.9% 적립",
+        "기본 적립 0.7%: 2만원 이상 이용 시",
+        "기본 적립 0.9%: 10만원 이상 이용 시",
+        "* 해외이용액은 0.9% 적립"
+      ]
+    },
+    {
+      "type": "기타",
+      "summary": "제휴서비스",
+      "details": [
+        "OK Cashbag",
+        "OK Cashbag 가맹점 이용시 OK Cashbag 포인트 적립 서비스 제공",
+        "세부서비스안내 : OK Cashbag홈페이지(www.okcashbag.com)",
+        "GS리테일 멤버십(GS&Point)",
+        "GS리테일매장 이용시 GS&Point 적립 서비스 제공",
+        "세부서비스안내 :GS리테일 홈페이지(www.gsretail.com)",
+        "POP 카드",
+        "POP가맹점 이용시 할인 또는 추가 상품 제공",
+        "세부서비스안내 : POP 카드 홈페이지(www.popcard.co.kr)"
+      ]
+    }
+  ],
+  "caution": []
+}

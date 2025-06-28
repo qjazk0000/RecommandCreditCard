@@ -1,0 +1,45 @@
+{
+  "card_id": 2122,
+  "card_url": "https://www.card-gorilla.com/card/detail/2122",
+  "card_name": "J드라이빙카드",
+  "issuer": "제주은행",
+  "inactive": false,
+  "brands": [
+    "VISA"
+  ],
+  "annual_fee": {
+    "domestic": "국내 13,000원",
+    "international": "해외겸용 15,000원"
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "주유소",
+      "summary": "전국 모든 정유사 대상 리터당 100원 할인",
+      "details": [
+        "전국 모든 정유사 대상 리터당 100원 할인"
+      ]
+    },
+    {
+      "type": "보험",
+      "summary": "DB손해보험 자동차보험 1만원 청구할인",
+      "details": []
+    },
+    {
+      "type": "정비",
+      "summary": "차량정비업종, 주차장, 세차장 5% 청구할인",
+      "details": []
+    },
+    {
+      "type": "카페/디저트",
+      "summary": "GS편의점, 스타벅스, 투썸플레이스 5% 청구할인",
+      "details": []
+    }
+  ],
+  "caution": [
+    "<연회비 반환 기준>",
+    "<서비스 제공 조건>",
+    "<기타 사항>"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "card_id": 1440,
+  "card_url": "https://www.card-gorilla.com/card/detail/1440",
+  "card_name": "하이 체크카드",
+  "issuer": "BNK부산은행",
+  "inactive": false,
+  "brands": [
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 1,000원",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "BC TOP",
+      "summary": "TOP 포인트 적립",
+      "details": [
+        "TOP포인트 적립",
+        "건당 2만원 이상 이용시 신판 이용금액의 0.1% 적립"
+      ]
+    },
+    {
+      "type": "주유",
+      "summary": "SK주유소 1.5% 할인",
+      "details": [
+        "주유 할인",
+        "SK주유소 이용 시 주유금액의 1.5% 할인",
+        "1일 2회, 1회 10만원 이내, 월 6회, 결제일에 캐쉬백 처리"
+      ]
+    },
+    {
+      "type": "영화",
+      "summary": "영화관 1,500원 할인",
+      "details": [
+        "영화 할인",
+        "전국 영화관 현장할인 및 인터넷예매(네이버영화, 인터파크, 예스24) 1,500원 할인",
+        "1일 1회, 월 2회, 연 12회"
+      ]
+    },
+    {
+      "type": "택시",
+      "summary": "택시 5% 할인",
+      "details": [
+        "택시 할인",
+        "택시요금(등대콜) 5% 할인",
+        "월 5회, 건당 1,000원 할인"
+      ]
+    }
+  ],
+  "caution": [
+    "서비스 공통 할인조건",
+    "전월 국내 신판이용금액 20만원 이상 시용 시 할인서비스 제공",
+    "카드 수령일 포함 2개월 간은 이용 실적에 관계 없이 제공"
+  ]
+}

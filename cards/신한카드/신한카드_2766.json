@@ -1,0 +1,18 @@
+{
+  "card_id": 2766,
+  "card_url": "https://www.card-gorilla.com/card/detail/2766",
+  "card_name": "",
+  "issuer": "신한카드",
+  "inactive": false,
+  "brands": [
+    "Mastercard"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 9,000원",
+    "international": "해외겸용 12,000원"
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [],
+  "caution": []
+}

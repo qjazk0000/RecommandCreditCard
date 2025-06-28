@@ -1,0 +1,41 @@
+{
+  "card_id": 1789,
+  "card_url": "https://www.card-gorilla.com/card/detail/1789",
+  "card_name": "S-OIL화물복지50",
+  "issuer": "우리카드",
+  "inactive": false,
+  "brands": [
+    "UnionPay"
+  ],
+  "annual_fee": {
+    "domestic": "없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "주유소",
+      "summary": "S-OIL 리터당 50원 현장할인",
+      "details": [
+        "실적 조건없이 50원 현장할인",
+        "경유 주유시에만 할인 적용 (타 유종 및 주유 외 매출은 제외)",
+        "현장할인은 전월실적 및 할인한도 없이 제공",
+        "상기 할인은 S-OIL 화물차우대주유소 이용 시 제공 (일반주유소는 제외)",
+        "유가보조금 잔여한도 및 잔여리터는 카드승인시점에 SMS로 발송되며, 화물유가보조금통합시스템(www.truckcard.co.kr)에서 조회가능"
+      ]
+    },
+    {
+      "type": "기타",
+      "summary": "S-OIL 멤버십카드 관련사항",
+      "details": [
+        "S-OIL 멤버십카드 관련사항",
+        "S-OIL 화물복지 50 카드 발급 시 S-OIL 멤버십 기능이 자동 탑재되므로 별도 멤버십 카드 제시 불필요",
+        "S-OIL 화물복지 50 카드 탈회 후 멤버십 혜택을 받기 위해서는 별도의 멤버십 카드를 발급 받아 사용해야 함",
+        "멤버십 관련문의",
+        "* S-OIL 고객센터 : ☎1644-5151 (www.s-oilbonus.com)"
+      ]
+    }
+  ],
+  "caution": []
+}

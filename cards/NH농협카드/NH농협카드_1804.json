@@ -1,0 +1,40 @@
+{
+  "card_id": 1804,
+  "card_url": "https://www.card-gorilla.com/card/detail/1804",
+  "card_name": "공무원연금체크카드(퇴직)(비씨)",
+  "issuer": "NH농협카드",
+  "inactive": false,
+  "brands": [],
+  "annual_fee": {
+    "domestic": "국내전용 없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "영화",
+      "summary": "대상주요 영화관 건당 1,500원 현장할인",
+      "details": [
+        "대상주요 영화관 건당 1,500원 현장할인",
+        "인터넷 영화 예매 건당 1,500원 청구할인"
+      ]
+    },
+    {
+      "type": "주유",
+      "summary": "SK주유소 이용시 리터당 40원 할인",
+      "details": [
+        "SK주유소 이용시 리터당 40원 할인"
+      ]
+    },
+    {
+      "type": "OK캐쉬백",
+      "summary": "OK캐쉬백 포인트 적립",
+      "details": [
+        "OK캐쉬백 포인트 적립",
+        "SMS 무료 제공"
+      ]
+    }
+  ],
+  "caution": []
+}

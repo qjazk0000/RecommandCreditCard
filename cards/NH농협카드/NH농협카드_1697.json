@@ -1,0 +1,36 @@
+{
+  "card_id": 1697,
+  "card_url": "https://www.card-gorilla.com/card/detail/1697",
+  "card_name": "평생교육희망카드(비씨)",
+  "issuer": "NH농협카드",
+  "inactive": false,
+  "brands": [
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "모든가맹점",
+      "summary": "국내 전 가맹점에서 0.2% 할인",
+      "details": [
+        "전월실적 30만원 이상  시 월 할인한도 1만원 적용",
+        "전월실적 50만원 이상 시 월 할인한도 2만원 적용",
+        "전월실적 100만원 이상 시 월 할인한도 4만원 적용"
+      ]
+    },
+    {
+      "type": "교육/육아",
+      "summary": "평생교육 바우처 제공",
+      "details": [
+        "평생교육 바우처란?",
+        "학습자가 본인의 학습 요구에 따라 자율적으로 학습 활동을 결정하고 참여할 수 있도록 정부가 제공하는 평생교육이용권으로 1인당 연간 최대 35만원의 평생교육 강좌 수강료 지원"
+      ]
+    }
+  ],
+  "caution": []
+}

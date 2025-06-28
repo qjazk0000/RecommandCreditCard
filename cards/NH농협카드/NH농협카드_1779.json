@@ -1,0 +1,53 @@
+{
+  "card_id": 1779,
+  "card_url": "https://www.card-gorilla.com/card/detail/1779",
+  "card_name": "농협OK체크카드(개인)",
+  "issuer": "NH농협카드",
+  "inactive": false,
+  "brands": [
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "OK캐쉬백",
+      "summary": "OK캐시백 포인트 적립 및 사용",
+      "details": [
+        "OK캐쉬백 포인트 적립",
+        "이용실적에 따른 적립 포인트",
+        "월 20만원 이상~월 30만원 미만 : 0.1% 포인트 적립",
+        "월 30만원 이상~월 100만원 미만 : 0.2% 포인트 적립",
+        "월 100만원 이상 : 0.3% 포인트 적립",
+        "월 3천 포인트 한도",
+        "OK캐쉬백 포인트 사용"
+      ]
+    },
+    {
+      "type": "주유",
+      "summary": "SK주유소 이용시 리터당 40원 할인(LPG 제외)",
+      "details": [
+        "SK주유소 이용시 리터당 40원 할인(LPG 제외)"
+      ]
+    },
+    {
+      "type": "영화",
+      "summary": "인터넷 영화 예매 1,500원 청구할인 (예매수수료별도)",
+      "details": [
+        "인터넷 영화 예매 1,500원 청구할인 (예매수수료별도)"
+      ]
+    },
+    {
+      "type": "기타",
+      "summary": "SMS 무료 제공",
+      "details": [
+        "SMS 무료 제공"
+      ]
+    }
+  ],
+  "caution": []
+}

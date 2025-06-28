@@ -1,0 +1,34 @@
+{
+  "card_id": 2132,
+  "card_url": "https://www.card-gorilla.com/card/detail/2132",
+  "card_name": "제주 삼다수카드(신용)",
+  "issuer": "제주은행",
+  "inactive": false,
+  "brands": [
+    "VISA",
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "국내 13,000원",
+    "international": "해외겸용 15,000원"
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "주유소",
+      "summary": "전국 모든 정유사 대상 리터당 100원 할인",
+      "details": []
+    },
+    {
+      "type": "할인",
+      "summary": "보험료할인, 차량관련업종 할인 GS편의점, 스타벅스, 투썸플레이스 5% 청구할인",
+      "details": []
+    }
+  ],
+  "caution": [
+    "<연회비반환 기준>",
+    "<서비스 제공 조건>",
+    "<기타 사항>"
+  ]
+}

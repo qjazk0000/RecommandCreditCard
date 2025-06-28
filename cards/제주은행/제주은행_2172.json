@@ -1,0 +1,46 @@
+{
+  "card_id": 2172,
+  "card_url": "https://www.card-gorilla.com/card/detail/2172",
+  "card_name": "탐나는J체크카드",
+  "issuer": "제주은행",
+  "inactive": false,
+  "brands": [
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "대중교통",
+      "summary": "대중교통 10% 청구 할인",
+      "details": []
+    },
+    {
+      "type": "교육/육아",
+      "summary": "토익 응시료 할인 도내 서비스 할인 (영어학원, 서점)",
+      "details": []
+    },
+    {
+      "type": "통신",
+      "summary": "이동통신요금 3% 청구 할인",
+      "details": []
+    },
+    {
+      "type": "편의점",
+      "summary": "편의점(CU) 최대 7% 청구 할인",
+      "details": []
+    },
+    {
+      "type": "푸드",
+      "summary": "패밀리레스토랑(VIPS) 20% 청구 할인 커피전문점 20% 청구 할인",
+      "details": []
+    }
+  ],
+  "caution": [
+    "<서비스 제공 조건 안내>"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "card_id": 1335,
+  "card_url": "https://www.card-gorilla.com/card/detail/1335",
+  "card_name": "The-K Auto 체크카드",
+  "issuer": "하나카드",
+  "inactive": false,
+  "brands": [
+    "VISA"
+  ],
+  "annual_fee": {
+    "domestic": "해외겸용 없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "캐시백",
+      "summary": "주유 캐쉬백 - 2만원당 500원 캐쉬백 특별 캐쉬백 - 2만원당 100원 캐쉬백",
+      "details": [
+        "캐쉬백 서비스",
+        "캐쉬백 방법",
+        "* 매월 1일 ~ 말일까지 사용한 금액에 대하여 다음달 5영업일 체크카드 결제계좌로 입금",
+        "* 사용금액 취소 시, 이미 캐쉬백 된 금액은 제외 후 환불",
+        "서비스 제공 조건",
+        "* 전월 1일~말일 사용금액 25만원 이상 시 제공",
+        "* 해외사용금액, 국세/지방세/공과금 납부, 상품권구입, 선불카드 충전, 아이행복 정부 지원금은 전월실적 제외",
+        "* 최초 카드 사용등록 후 다음달 말까지는 전월 사용금액 관계없이 서비스 제공"
+      ]
+    },
+    {
+      "type": "해외이용",
+      "summary": "해외에서 ATM 사용 및 물품구매 가능",
+      "details": [
+        "해외에서 ATM 사용 및 물품구매 가능",
+        "해외이용안내 자세히보기 (바로가기>)"
+      ]
+    }
+  ],
+  "caution": []
+}
