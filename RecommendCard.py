@@ -55,11 +55,10 @@ class ModelManager:  # 임베딩/LLM/DB 등 모델 및 벡터스토어 관리 �
     def initialize_llm(self) -> None:
         """LLM 모델 초기화"""
         try:
-            self.llm = ChatOpenAI(model="gpt-4")
-            print("✅ OpenAI GPT-4 모델을 사용합니다.")
+            self.llm = ChatOpenAI(model="gpt-4.1")
+            print("OpenAI GPT-4 모델을 사용합니다.")
         except Exception as e:
-            print(f"⚠️ OpenAI 모델 로딩 실패: {e}")
-            print("로컬 모델을 사용하거나 API 키를 확인하세요.")
+            print(f"OpenAI 모델 로딩 실패: {e}")
             raise
     
     def load_faiss_database(self) -> None:
@@ -220,25 +219,32 @@ class PromptBuilder:  # LLM 프롬프트 템플릿 생성 클래스
 
         당신에게는 다음 두 가지 정보가 주어집니다:
         1. 사용자의 질문 또는 소비 패턴 설명 (예: "주유 혜택 많은 카드 추천", "외식과 편의점 자주 씀")
-        2. 카드별 혜택과 유의사항이 담긴 카드 정보 목록
+        2. 카드별 혜택과 유의사항이 담긴 카드 정보 목록 (벡터 DB에서 유사도 높은 5개 카드)
 
-        카드 정보를 바탕으로 사용자의 요구에 가장 잘 부합하는 **신용카드 2~3개를 추천**해 주세요. 추천 시 다음을 반드시 포함하세요:
+        제공된 카드 정보를 바탕으로 사용자의 요구에 가장 잘 부합하는 **정확히 3개의 신용카드를 추천**해 주세요.
 
-        **필수 포함 정보:**
-        - 🏦 **카드사명**: 정확한 카드사 이름
-        - 💳 **카드명**: 정확한 카드 이름
-        - 🔗 **카드 URL**: 반드시 포함 (카드 정보에 URL이 있다면 반드시 표시)
+        **추천 규칙:**
+        - 반드시 3개의 카드만 추천하세요
+        - 사용자의 소비 패턴과 가장 관련성이 높은 카드를 우선적으로 추천하세요
+        - 각 카드는 서로 다른 특징을 가져야 합니다 (다양성 확보)
+        - 카드 정보에 없는 내용은 생성하지 마세요
+
+        **각 카드별 필수 포함 정보:**
+        - **카드사명**: 정확한 카드사 이름
+        - **카드명**: 정확한 카드 이름
+        - **카드 URL**: 반드시 포함 (카드 정보에 URL이 있다면 반드시 표시)
         
-        **추천 내용:**
+        **각 카드별 추천 내용:**
         - 해당 카드가 사용자의 소비 패턴과 어떻게 잘 맞는지 **명확한 이유를 들어 설명**
         - **주요 혜택을 항목별로 정리** (각 혜택을 별도 줄에 • 또는 - 기호로 구분)
         - 유의사항 요약
-        - **6~10줄 이내로 충분히 상세하게 정리**
+        - **5~8줄 이내로 충분히 상세하게 정리**
 
-        **출력 형식 예시:**
-        🏦 카드사: [카드사명]
-        💳 카드명: [카드명]
-        🔗 카드 URL: [URL] (URL이 있는 경우)
+        **출력 형식:**
+        ## 추천 카드 1
+        **카드사**: [카드사명]
+        **카드명**: [카드명]
+        **카드 URL**: [URL] (URL이 있는 경우)
         
         [추천 이유]
         
@@ -251,9 +257,43 @@ class PromptBuilder:  # LLM 프롬프트 템플릿 생성 클래스
         • [유의사항1]
         • [유의사항2]
 
-        **중요**: 카드 정보에 URL이 포함되어 있다면 반드시 출력에 포함시켜주세요. URL은 사용자가 카드에 대한 자세한 정보를 확인할 수 있는 중요한 정보입니다.
+        ## 추천 카드 2
+        **카드사**: [카드사명]
+        **카드명**: [카드명]
+        **카드 URL**: [URL] (URL이 있는 경우)
+        
+        [추천 이유]
+        
+        **주요 혜택:**
+        • [혜택1]: [상세 내용]
+        • [혜택2]: [상세 내용]
+        • [혜택3]: [상세 내용]
+        
+        **유의사항:**
+        • [유의사항1]
+        • [유의사항2]
 
-        카드 정보에 없는 내용은 생성하지 마세요.
+        ## 추천 카드 3
+        **카드사**: [카드사명]
+        **카드명**: [카드명]
+        **카드 URL**: [URL] (URL이 있는 경우)
+        
+        [추천 이유]
+        
+        **주요 혜택:**
+        • [혜택1]: [상세 내용]
+        • [혜택2]: [상세 내용]
+        • [혜택3]: [상세 내용]
+        
+        **유의사항:**
+        • [유의사항1]
+        • [유의사항2]
+
+        **중요**: 
+        - 반드시 3개의 카드만 추천하세요
+        - 카드 정보에 URL이 포함되어 있다면 반드시 출력에 포함시켜주세요
+        - 카드 정보에 없는 내용은 생성하지 마세요
+        - 각 카드는 서로 다른 특징을 가져야 합니다
         """)
 
 
@@ -310,8 +350,13 @@ class CardRecommendationSystem:  # 카드 추천 시스템 전체 RAG 체인 관
             raise ValueError("Retriever가 초기화되지 않았습니다.")
         
         docs = self.model_manager.retriever.invoke(query)
+        print(f"벡터 DB에서 {len(docs)}개 카드 검색 완료")
+        
         conditions = QueryFilter.extract_filter_conditions(query)
         filtered_docs = QueryFilter.apply_filters(docs, conditions)
+        
+        if len(filtered_docs) != len(docs):
+            print(f"필터링 후 {len(filtered_docs)}개 카드로 축소")
         
         return {"query": query, "docs": filtered_docs}
     
@@ -346,6 +391,9 @@ def get_recommendation_system() -> CardRecommendationSystem:
 def main():  # 카드 추천 시스템 CLI 실행 함수
     """메인 실행 함수"""
     print("=== 카드 추천 시스템 ===")
+    print("사용자 입력에 따라 벡터 DB에서 유사도 높은 5개 카드를 검색하여")
+    print("LLM이 최적의 3개 신용카드를 추천해드립니다.")
+    print()
     print("필터링 옵션:")
     print("- 카드사 필터링")
     print("- 카드명 필터링")
@@ -368,8 +416,9 @@ def main():  # 카드 추천 시스템 CLI 실행 함수
                 continue
             
             try:
+                print("\n벡터 DB에서 유사도 높은 5개 카드를 검색 중...")
                 result = system.recommend_cards(user_query)
-                print("\n추천 결과:\n")
+                print("\n=== 추천 결과 (3개 카드) ===\n")
                 print(result)
                 print("\n" + "="*50 + "\n")
             except Exception as e:

@@ -5,14 +5,28 @@ import os
 from typing import List, Dict, Optional, Any
 from dataclasses import dataclass
 from dotenv import load_dotenv
+import random
+import re
+import time
 
 from ragas import evaluate
-from ragas.metrics import faithfulness, answer_relevancy
+from ragas.metrics import faithfulness, answer_relevancy, context_recall, context_precision, answer_similarity
 from datasets import Dataset
 
 # RecommendCard.py에서 카드 추천 시스템 import
 from RecommendCard import get_recommendation_system
 
+MAX_TOKENS = 512
+
+from transformers import AutoTokenizer
+tokenizer = AutoTokenizer.from_pretrained('klue/roberta-base')
+def count_tokens(text):
+    return len(tokenizer.encode(text))
+def truncate_tokens(text, max_tokens=256):
+    tokens = tokenizer.encode(text)
+    if len(tokens) > max_tokens:
+        tokens = tokens[:max_tokens]
+    return tokenizer.decode(tokens)
 
 @dataclass  # RAGAS 평가 결과(점수 등) 저장 데이터 클래스
 class EvaluationResult:
@@ -32,7 +46,7 @@ class EnvironmentValidator:  # 환경 변수(OPENAI API KEY 등) 검증 클래�
         """OpenAI API 키 검증"""
         if not os.getenv("OPENAI_API_KEY"):
             raise ValueError(
-                "❌ OpenAI API 키가 설정되지 않았습니다.\n"
+                "OpenAI API 키가 설정되지 않았습니다.\n"
                 "1. .env 파일에 OPENAI_API_KEY=your_api_key를 추가하세요.\n"
                 "2. 또는 환경 변수로 설정하세요."
             )
@@ -78,244 +92,152 @@ class DatasetBuilder:  # 평가용 데이터셋 생성 및 컨텍스트 추출 �
         
         return context_texts
 
+    def create_synthetic_evaluation_set(self, n: int = 10) -> Dataset:
+        db = self.recommendation_system.model_manager.db
+        if not db:
+            raise ValueError("FAISS DB가 초기화되지 않았습니다.")
+        all_docs = db.similarity_search("", k=db.index.ntotal)
+        filtered_docs = [doc for doc in all_docs if count_tokens(doc.page_content) <= 512]
+        if len(filtered_docs) < n:
+            raise ValueError(f"DB 내 적절한 길이의 문서가 부족합니다. (총 {len(filtered_docs)}개)")
+        sampled_docs = random.sample(filtered_docs, n)
+        questions = [truncate_tokens(doc.page_content, max_tokens=256) for doc in sampled_docs]
+        answers = [self.recommendation_system.recommend_cards(q) for q in questions]
+        contexts = [[truncate_tokens(doc.page_content, max_tokens=256)] for doc in sampled_docs]
+        references = [truncate_tokens(doc.page_content, max_tokens=256) for doc in sampled_docs]
+        return Dataset.from_dict({
+            "question": questions,
+            "answer": answers,
+            "contexts": contexts,
+            "reference": references
+        })
+
 
 class RAGASEvaluator:  # RAGAS 평가 실행 및 결과 파싱 클래스
     """RAGAS 평가 실행 클래스"""
     
-    METRICS = [faithfulness, answer_relevancy]
+    METRICS = [faithfulness, answer_relevancy, context_recall, context_precision, answer_similarity]
     
     @staticmethod
-    def evaluate_dataset(dataset: Dataset) -> EvaluationResult:
-        """데이터셋에 대한 RAGAS 평가 실행"""
+    def evaluate_dataset(dataset: Dataset):
         print("RAGAS 평가 실행 중...")
-        print(f"데이터셋 구조: {dataset}")
-        print(f"데이터셋 컬럼: {dataset.column_names}")
-        print(f"데이터셋 크기: {len(dataset)}")
-        
-        # 데이터셋 구조 확인
-        if len(dataset) > 0:
-            print(f"첫 번째 질문: {dataset['question'][0]}")
-            print(f"첫 번째 답변: {dataset['answer'][0][:200]}...")
-            print(f"첫 번째 컨텍스트 수: {len(dataset['contexts'][0])}")
-        
-        # 평가 실행
         results = evaluate(dataset, RAGASEvaluator.METRICS)
-        
-        print(f"RAGAS 원본 결과: {results}")
-        
-        # 결과 파싱
-        return RAGASEvaluator._parse_results(results)
+        print("\n[RAGAS 결과 객체 타입]", type(results))
+        print("[RAGAS 결과 객체 dir]", dir(results))
+        print("[RAGAS 결과 객체 내용]", results)
+        if hasattr(results, 'scores'):
+            print("[results.scores]", results.scores)
+        if hasattr(results, '_scores_dict'):
+            print("[results._scores_dict]", results._scores_dict)
+        if isinstance(results, dict):
+            print("[results dict keys]", results.keys())
+        return results
+
+
+def print_synthetic_evaluation_results(dataset, results, n):
+    print("\n=== Synthetic 평가 결과 샘플 ===")
+    for i in range(n):
+        print(f"\n--- [Sample {i+1}] ---")
+        print(f"[질문/문서] {dataset['question'][i][:200]}...")
+        print(f"[답변] {dataset['answer'][i][:200]}...")
+    print("\n==================== RAGAS 평가 지표 ====================")
+    metrics = [
+        ("faithfulness", "정합성 (faithfulness)"),
+        ("answer_relevancy", "정답 관련성 (answer_relevancy)"),
+        ("context_recall", "컨텍스트 재현율 (context_recall)"),
+        ("context_precision", "컨텍스트 정밀도 (context_precision)"),
+        ("semantic_similarity", "의미 유사도 (semantic_similarity)")
+    ]
+    scores_dict = getattr(results, '_scores_dict', None)
+    if scores_dict is None and hasattr(results, 'scores'):
+        scores_dict = {}
+        for metric, _ in metrics:
+            values = [d[metric] for d in results.scores if metric in d]
+            if values:
+                scores_dict[metric] = values
+    for metric, label in metrics:
+        value = None
+        if scores_dict and metric in scores_dict:
+            vals = scores_dict[metric]
+            if isinstance(vals, list) and vals:
+                value = sum(vals) / len(vals)
+            else:
+                value = vals
+        print(f"{label:>20}: {value:.4f}" if value is not None else f"{label:>20}: N/A")
+    print("========================================================\n")
+
+
+# main 함수: 실행시간 측정 추가
+
+def main():
+    from RecommendCard import get_recommendation_system
+    start = time.time()
+    recommendation_system = get_recommendation_system()
+    dataset_builder = DatasetBuilder(recommendation_system)
+    n = 10
+    dataset = dataset_builder.create_synthetic_evaluation_set(n)
+    results = RAGASEvaluator.evaluate_dataset(dataset)
+    print_synthetic_evaluation_results(dataset, results, n)
+    end = time.time()
+    print(f"\n총 실행 시간: {end - start:.2f}초")
     
-    @staticmethod
-    def _parse_results(results: Any) -> EvaluationResult:
-        """RAGAS 결과 파싱"""
-        try:
-            print(f"결과 타입: {type(results)}")
-            print(f"결과 속성들: {dir(results)}")
-            
-            faithfulness_score = None
-            answer_relevancy_score = None
+    # 평가 결과 반환
+    return results, dataset, end - start
 
-            # 1. scores
-            if hasattr(results, 'scores') and isinstance(results.scores, dict):
-                scores = results.scores
-                print(f"scores 속성: {scores}")
-                f = scores.get('faithfulness', 0.0)
-                a = scores.get('answer_relevancy', 0.0)
-                faithfulness_score = float(f[0]) if isinstance(f, list) else float(f)
-                answer_relevancy_score = float(a[0]) if isinstance(a, list) else float(a)
-                print(f"[scores] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
-
-            # 2. _scores_dict
-            if (faithfulness_score is None or answer_relevancy_score is None) and hasattr(results, '_scores_dict'):
-                scores_dict = results._scores_dict
-                print(f"_scores_dict 속성: {scores_dict}")
-                f = scores_dict.get('faithfulness', 0.0)
-                a = scores_dict.get('answer_relevancy', 0.0)
-                faithfulness_score = float(f[0]) if isinstance(f, list) else float(f)
-                answer_relevancy_score = float(a[0]) if isinstance(a, list) else float(a)
-                print(f"[_scores_dict] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
-
-            # 3. dict
-            if (faithfulness_score is None or answer_relevancy_score is None) and isinstance(results, dict):
-                f = results.get('faithfulness', 0.0)
-                a = results.get('answer_relevancy', 0.0)
-                faithfulness_score = float(f[0]) if isinstance(f, list) else float(f)
-                answer_relevancy_score = float(a[0]) if isinstance(a, list) else float(a)
-                print(f"[dict] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
-
-            # 4. 직접 속성
-            if (faithfulness_score is None or answer_relevancy_score is None):
-                faithfulness_score = float(getattr(results, 'faithfulness', 0.0))
-                answer_relevancy_score = float(getattr(results, 'answer_relevancy', 0.0))
-                print(f"[attr] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
-
-            # 평균 점수 계산
-            scores = [faithfulness_score, answer_relevancy_score]
-            average_score = sum(scores) / len(scores)
-
-            # 결과 해석
-            interpretation = RAGASEvaluator._interpret_score(average_score)
-
-            return EvaluationResult(
-                faithfulness_score=faithfulness_score,
-                answer_relevancy_score=answer_relevancy_score,
-                average_score=average_score,
-                interpretation=interpretation,
-                raw_results=results
-            )
-
-        except Exception as e:
-            print(f"결과 처리 중 오류: {e}")
-            import traceback
-            traceback.print_exc()
-            print("원본 결과:", results)
-            
-            # 기본값 반환
-            return EvaluationResult(
-                faithfulness_score=0.0,
-                answer_relevancy_score=0.0,
-                average_score=0.0,
-                interpretation="결과 처리 실패",
-                raw_results=results
-            )
-    
-    @staticmethod
-    def _interpret_score(score: float) -> str:
-        """점수 해석"""
-        if score >= 0.8:
-            return "🟢 우수한 성능: 답변이 매우 정확하고 관련성이 높습니다."
-        elif score >= 0.6:
-            return "🟡 양호한 성능: 답변이 적절한 수준입니다."
-        else:
-            return "🔴 개선 필요: 답변의 품질을 향상시킬 필요가 있습니다."
-
-
-class ResultPrinter:  # 평가 결과(점수, 해석 등) 출력 클래스
-    """결과 출력 클래스"""
-    
-    @staticmethod
-    def print_evaluation_results(question: str, result: EvaluationResult, answer: str) -> None:
-        """평가 결과 출력"""
-        print(f"\n=== RAGAS 평가 결과 ===")
-        print(f"faithfulness: {result.faithfulness_score:.3f}")
-        print(f"answer_relevancy: {result.answer_relevancy_score:.3f}")
-        print(f"\n평균 점수: {result.average_score:.3f}")
+def generate_report_from_results(results, dataset, execution_time):
+    """평가 결과를 바탕으로 보고서 생성"""
+    # 보고서 생성 여부 확인
+    while True:
+        print("\n" + "="*50)
+        print("평가 보고서 생성")
+        print("="*50)
+        user_input = input("평가 결과를 PDF 보고서로 생성하시겠습니까? (Y/N): ").strip().upper()
         
-        print(f"\n=== 결과 해석 ===")
-        print(result.interpretation)
-        
-        print(f"\n=== 생성된 답변 ===")
-        print(answer)
-
-
-class RAGEvaluator:  # 전체 평가 파이프라인 관리 클래스
-    """RAG 시스템 성능 평가 메인 클래스"""
-    
-    def __init__(self):
-        self.recommendation_system = None
-        self.dataset_builder = None
-    
-    def initialize(self) -> None:
-        """시스템 초기화"""
-        print("카드 추천 시스템 초기화 중...")
-        
-        # 환경 변수 검증
-        load_dotenv()
-        EnvironmentValidator.validate_openai_key()
-        
-        # 카드 추천 시스템 초기화
-        self.recommendation_system = get_recommendation_system()
-        self.dataset_builder = DatasetBuilder(self.recommendation_system)
-        
-        print("모델 초기화 완료")
-    
-    def evaluate_single_question(self, user_question: str) -> Optional[EvaluationResult]:
-        """사용자 질문에 대한 단일 평가"""
-        print(f"=== 질문 평가: {user_question} ===")
-        
-        try:
-            if not self.dataset_builder:
-                raise ValueError("데이터셋 빌더가 초기화되지 않았습니다.")
-            
-            # 데이터셋 생성
-            dataset = self.dataset_builder.create_single_question_dataset(user_question)
-            
-            # RAGAS 평가 실행
-            result = RAGASEvaluator.evaluate_dataset(dataset)
-            
-            # 답변 추출 (데이터셋에서)
-            answer = dataset["answer"][0]
-            
-            # 결과 출력
-            ResultPrinter.print_evaluation_results(user_question, result, answer)
-            
-            return result
-            
-        except Exception as e:
-            print(f"평가 중 오류 발생: {e}")
-            import traceback
-            traceback.print_exc()
-            return None
-
-
-class InteractiveEvaluator:  # CLI에서 실시간 평가 인터페이스 제공 클래스
-    """대화형 평가 인터페이스"""
-    
-    def __init__(self):
-        self.evaluator = RAGEvaluator()
-    
-    def run(self) -> None:
-        """대화형 평가 실행"""
-        print("=== RAGAS 실시간 평가 시스템 ===")
-        print("사용자 질문에 대해 RAGAS 지표를 실시간으로 계산합니다.")
-        print("종료하려면 'quit' 또는 'exit'를 입력하세요.")
-        print()
-        
-        try:
-            self.evaluator.initialize()
-            
-            while True:
-                user_question = self._get_user_input()
+        if user_input == 'Y':
+            print("\n보고서 생성 중...")
+            try:
+                # 현재 작업 디렉토리 확인
+                import os
+                print(f"현재 작업 디렉토리: {os.getcwd()}")
                 
-                if user_question is None:  # 종료 신호
+                # RAG_Evaluation_Report.py 파일 존재 확인
+                if not os.path.exists("RAG_Evaluation_Report.py"):
+                    print("RAG_Evaluation_Report.py 파일을 찾을 수 없습니다.")
                     break
                 
-                if not user_question:  # 빈 입력
-                    print("질문을 입력해주세요.")
-                    continue
+                print("RAG_Evaluation_Report.py 파일 발견")
                 
-                # 평가 실행
-                self.evaluator.evaluate_single_question(user_question)
-                print("\n" + "="*50 + "\n")
-        
-        except Exception as e:
-            print(f"시스템 초기화 실패: {e}")
-    
-    def _get_user_input(self) -> Optional[str]:
-        """사용자 입력 받기"""
-        try:
-            user_input = input("질문을 입력하세요: ").strip()
-            
-            if user_input.lower() in ['quit', 'exit', '종료']:
-                print("평가 시스템을 종료합니다.")
-                return None
-            
-            return user_input
-            
-        except KeyboardInterrupt:
-            print("\n평가 시스템을 종료합니다.")
-            return None
-        except EOFError:
-            print("\n평가 시스템을 종료합니다.")
-            return None
-
-
-def main():  # 평가 CLI 실행 함수
-    """메인 실행 함수"""
-    evaluator = InteractiveEvaluator()
-    evaluator.run()
+                # 실제 평가 결과를 전달하여 보고서 생성
+                import RAG_Evaluation_Report
+                RAG_Evaluation_Report.create_report_with_results(results, dataset, execution_time)
+                print("보고서 생성이 완료되었습니다!")
+                
+                # 생성된 파일 확인
+                import glob
+                reports_files = glob.glob("reports/*")
+                if reports_files:
+                    print("생성된 파일들:")
+                    for file in reports_files:
+                        print(f"  - {file}")
+                else:
+                    print("reports 폴더에 파일이 생성되지 않았습니다.")
+                    
+            except ImportError as e:
+                print(f"모듈 import 오류: {e}")
+                print("필요한 라이브러리가 설치되어 있는지 확인하세요:")
+                print("pip install reportlab matplotlib")
+            except Exception as e:
+                print(f"보고서 생성 중 오류가 발생했습니다: {e}")
+                import traceback
+                traceback.print_exc()
+            break
+        elif user_input == 'N':
+            print("보고서 생성을 건너뜁니다.")
+            break
+        else:
+            print("잘못된 입력입니다. Y 또는 N을 입력해주세요.")
 
 
 if __name__ == "__main__":
-    main() 
+    results, dataset, execution_time = main()
+    generate_report_from_results(results, dataset, execution_time) 

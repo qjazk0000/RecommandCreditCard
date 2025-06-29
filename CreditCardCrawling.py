@@ -117,13 +117,27 @@ def extract_card_info(driver, card_id: int) -> dict:  # 카드 상세 정보(혜
     try:
         section = driver.find_element(By.CLASS_NAME, "bnf2")
         for dl in section.find_elements(By.TAG_NAME, "dl"):
-            dt = dl.findelement(By.TAG_NAME, "dt").text.strip()
+            dt = dl.find_element(By.TAG_NAME, "dt").text.strip()
             if "전월실적" in dt:
                 dd = dl.find_element(By.TAG_NAME, "dd")
-                raw = dd.text.strip().replace("\n", "")
-                data["required_spending"] = raw
-                match = re.search(r"(\d+)", raw)
-                data["required_spending_amount"] = int(match.group(1)) if match else None
+                # <b> 태그(숫자) 추출
+                try:
+                    b_elem = dd.find_element(By.TAG_NAME, "b")
+                    number = b_elem.text.strip()
+                    # <b> 태그 뒤의 텍스트 추출
+                    tail_text = dd.get_attribute("innerText").replace(number, "", 1).strip()
+                    raw = f"{number}{tail_text}"
+                    data["required_spending"] = raw
+                    try:
+                        data["required_spending_amount"] = int(number)
+                    except:
+                        data["required_spending_amount"] = None
+                except:
+                    # <b> 태그가 없을 때 기존 방식 fallback
+                    raw = dd.text.strip().replace("\n", "")
+                    data["required_spending"] = raw
+                    match = re.search(r"(\d+)", raw)
+                    data["required_spending_amount"] = int(match.group(1)) if match else None
                 break
         else:
             data["required_spending"] = data["required_spending_amount"] = None

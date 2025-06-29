@@ -238,11 +238,9 @@ class CardEmbeddingProcessor:  # 카드 JSON → 벡터 임베딩 및 FAISS DB �
                 # FAISS는 저장된 파일의 존재 여부로 검증
                 index_file = os.path.join(self.config.faiss_persist_dir, "index.faiss")
                 if os.path.exists(index_file):
-                    self.logger.info("=== FAISS DB 저장 완료 ===")
-                    self.logger.info(f"입력 문서 수: {len(documents)}개")
-                    self.logger.info("✅ 모든 문서가 성공적으로 저장되었습니다!")
+                    self.logger.info("모든 문서가 성공적으로 저장되었습니다!")
                 else:
-                    self.logger.warning("⚠️  경고: FAISS 인덱스 파일이 생성되지 않았습니다.")
+                    self.logger.warning("경고: FAISS 인덱스 파일이 생성되지 않았습니다.")
             except Exception as count_error:
                 self.logger.warning(f"저장 검증 실패: {count_error}")
                 self.logger.info("FAISS DB 저장은 완료되었습니다.")
@@ -263,7 +261,7 @@ class CardEmbeddingProcessor:  # 카드 JSON → 벡터 임베딩 및 FAISS DB �
             
             json_files = self.collect_json_files()
             if not json_files:
-                self.logger.error("❌ 처리할 JSON 파일을 찾을 수 없습니다.")
+                self.logger.error("처리할 JSON 파일을 찾을 수 없습니다.")
                 return False
             
             documents, stats = self.process_json_files(json_files)
@@ -273,7 +271,8 @@ class CardEmbeddingProcessor:  # 카드 JSON → 벡터 임베딩 및 FAISS DB �
             return success
             
         except Exception as e:
-            self.logger.error(f"프로세스 실행 중 오류 발생: {e}")
+            print("임베딩 프로세스 실행 중 오류가 발생했습니다.")
+            print(f"오류 내용: {e}")
             return False
 
 
@@ -284,9 +283,9 @@ def main():  # 카드 임베딩 전체 파이프라인 실행 함수
     
     success = processor.run()
     if success:
-        print("🎉 임베딩 프로세스가 성공적으로 완료되었습니다!")
+        print("임베딩 프로세스가 성공적으로 완료되었습니다!")
     else:
-        print("❌ 임베딩 프로세스 실행 중 오류가 발생했습니다.")
+        print("임베딩 프로세스 실행 중 오류가 발생했습니다.")
 
 
 if __name__ == "__main__":
