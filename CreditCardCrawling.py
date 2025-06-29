@@ -9,7 +9,7 @@ import json
 import re
 import os
 
-def wait_for_element(driver, selector, timeout=5):
+def wait_for_element(driver, selector, timeout=5):  # 셀레니움에서 특정 요소가 로드될 때까지 대기
     try:
         WebDriverWait(driver, timeout).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, selector))
@@ -18,7 +18,7 @@ def wait_for_element(driver, selector, timeout=5):
     except:
         return False
         
-def load_card_page(driver, card_id: int) -> bool:
+def load_card_page(driver, card_id: int) -> bool:  # 카드 상세 페이지 로드 및 정상 여부 반환
     url = f"https://www.card-gorilla.com/card/detail/{card_id}"
 
     driver.get(url)
@@ -27,7 +27,7 @@ def load_card_page(driver, card_id: int) -> bool:
         return False
     return True
    
-def expand_dl_sections(driver):
+def expand_dl_sections(driver):  # 카드 혜택/유의사항 섹션 모두 펼치기
     script = """
     const dls = document.querySelectorAll("div.lst.bene_area > dl");
     let count = 0;
@@ -52,7 +52,7 @@ def expand_dl_sections(driver):
     except Exception as e:
         print("[!] 혜택 영역 확장 실패: ", e)
     
-def extract_card_details(driver):
+def extract_card_details(driver):  # 카드 혜택/유의사항 정보 추출
     benefits, cautions = [], []
     try:
         # 혜택/유의사항이 확장된 dl 요소만 추출
@@ -81,7 +81,7 @@ def extract_card_details(driver):
         print("[!] 혜택 여역 추출 실패: ", e)
     return benefits, cautions
         
-def extract_card_info(driver, card_id: int) -> dict:
+def extract_card_info(driver, card_id: int) -> dict:  # 카드 상세 정보(혜택, 연회비 등) 추출
     data = {"card_id": card_id, "card_url": f"https://www.card-gorilla.com/card/detail/{card_id}"}
     
     # 카드명, 카드사, 발급여부, 브랜드
@@ -133,7 +133,7 @@ def extract_card_info(driver, card_id: int) -> dict:
     data["benefits"], data["caution"] = extract_card_details(driver)
     return data
 
-def save_card_json(data: dict, output_root="./crawling/beomseok/cards"):
+def save_card_json(data: dict, output_root="./crawling/beomseok/cards"):  # 카드 정보를 JSON 파일로 저장
     issuer = data.get("issuer", "unknown").strip().replace(" ", "_")
     
     # 디렉토리 경로: cards/현대카드/
@@ -145,7 +145,7 @@ def save_card_json(data: dict, output_root="./crawling/beomseok/cards"):
         
     print(f"저장 완료: {path}")
     
-def get_card_info(card_id: int, save=True) -> dict:
+def get_card_info(card_id: int, save=True) -> dict:  # 카드 상세 정보 크롤링 및 저장
     options = Options()
     for arg in ["--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage"]:
         options.add_argument(arg)
@@ -165,7 +165,7 @@ def get_card_info(card_id: int, save=True) -> dict:
     finally:
         driver.quit()
 
-def save_all_cards(start_id=1, end_id=2857, log_path="./card_crawl_log.txt"):
+def save_all_cards(start_id=1, end_id=2857, log_path="./card_crawl_log.txt"):  # 전체 카드 ID 범위에 대해 일괄 크롤링 및 저장
     with open(log_path, "w", encoding="utf-8") as log:
         for card_id in range(start_id, end_id + 1):
             print(f"\n[+] 카드 ID {card_id} 처리 중...")

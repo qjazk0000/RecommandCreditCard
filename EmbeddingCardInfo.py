@@ -11,7 +11,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 
 
-@dataclass
+@dataclass  # 임베딩 관련 설정값을 저장하는 데이터 클래스
 class EmbeddingConfig:
     """임베딩 설정 클래스"""
     card_folder: str = str((Path(__file__).parent / "cards").resolve())
@@ -21,7 +21,7 @@ class EmbeddingConfig:
     progress_interval: int = 10
 
 
-class CardEmbeddingProcessor:
+class CardEmbeddingProcessor:  # 카드 JSON → 벡터 임베딩 및 FAISS DB 저장 담당 클래스
     """카드 정보 임베딩 처리 클래스"""
     
     def __init__(self, config: EmbeddingConfig):
@@ -277,7 +277,7 @@ class CardEmbeddingProcessor:
             return False
 
 
-def main():
+def main():  # 카드 임베딩 전체 파이프라인 실행 함수
     """메인 실행 함수"""
     config = EmbeddingConfig()
     processor = CardEmbeddingProcessor(config)

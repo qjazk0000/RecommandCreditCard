@@ -19,7 +19,7 @@ from textwrap import dedent
 import torch
 
 
-@dataclass
+@dataclass  # 카드 필터링 조건을 저장하는 데이터 클래스
 class FilterConditions:
     """필터링 조건 데이터 클래스"""
     issuer: Optional[str] = None
@@ -28,7 +28,7 @@ class FilterConditions:
     brands: Optional[str] = None
 
 
-class ModelManager:
+class ModelManager:  # 임베딩/LLM/DB 등 모델 및 벡터스토어 관리 클래스
     """모델 관리 클래스"""
     
     def __init__(self):
@@ -85,7 +85,7 @@ class ModelManager:
             raise
 
 
-class QueryFilter:
+class QueryFilter:  # 쿼리에서 필터 조건 추출 및 문서 필터링 담당 클래스
     """쿼리 필터링 클래스"""
     
     SUPPORTED_ISSUERS = [
@@ -169,7 +169,7 @@ class QueryFilter:
         return True
 
 
-class DocumentFormatter:
+class DocumentFormatter:  # 카드 문서(혜택 등)를 프롬프트용 문자열로 변환하는 클래스
     """문서 포맷팅 클래스"""
     
     @staticmethod
@@ -201,7 +201,7 @@ class DocumentFormatter:
         return f"{card_info}\n{doc.page_content}"
 
 
-class PromptBuilder:
+class PromptBuilder:  # LLM 프롬프트 템플릿 생성 클래스
     """프롬프트 빌더 클래스"""
     
     @staticmethod
@@ -257,7 +257,7 @@ class PromptBuilder:
         """)
 
 
-class CardRecommendationSystem:
+class CardRecommendationSystem:  # 카드 추천 시스템 전체 RAG 체인 관리 클래스
     """카드 추천 시스템 메인 클래스"""
     
     def __init__(self):
@@ -343,7 +343,7 @@ def get_recommendation_system() -> CardRecommendationSystem:
     return _recommendation_system
 
 
-def main():
+def main():  # 카드 추천 시스템 CLI 실행 함수
     """메인 실행 함수"""
     print("=== 카드 추천 시스템 ===")
     print("필터링 옵션:")

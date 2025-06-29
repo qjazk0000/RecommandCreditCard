@@ -14,7 +14,7 @@ from datasets import Dataset
 from RecommendCard import get_recommendation_system
 
 
-@dataclass
+@dataclass  # RAGAS 평가 결과(점수 등) 저장 데이터 클래스
 class EvaluationResult:
     """평가 결과 데이터 클래스"""
     faithfulness_score: float
@@ -24,7 +24,7 @@ class EvaluationResult:
     raw_results: Any
 
 
-class EnvironmentValidator:
+class EnvironmentValidator:  # 환경 변수(OPENAI API KEY 등) 검증 클래스
     """환경 변수 검증 클래스"""
     
     @staticmethod
@@ -38,7 +38,7 @@ class EnvironmentValidator:
             )
 
 
-class DatasetBuilder:
+class DatasetBuilder:  # 평가용 데이터셋 생성 및 컨텍스트 추출 클래스
     """평가용 데이터셋 생성 클래스"""
     
     def __init__(self, recommendation_system):
@@ -52,29 +52,34 @@ class DatasetBuilder:
         # 컨텍스트 추출
         context_texts = self._extract_contexts(user_question)
         
-        # 데이터셋 생성
+        # RAGAS 요구사항에 맞는 데이터셋 생성
+        # contexts는 각 질문에 대해 리스트 형태여야 함
         return Dataset.from_dict({
             "question": [user_question],
             "answer": [answer],
-            "contexts": [context_texts]
+            "contexts": [context_texts]  # 각 질문에 대한 컨텍스트 리스트
         })
     
     def _extract_contexts(self, user_question: str) -> List[str]:
         """질문에 대한 컨텍스트 추출"""
-        if not self.recommendation_system.retriever:
+        if not self.recommendation_system.model_manager.retriever:
             raise ValueError("Retriever가 초기화되지 않았습니다.")
         
-        docs = self.recommendation_system.retriever.invoke(user_question)
+        docs = self.recommendation_system.model_manager.retriever.invoke(user_question)
         context_texts = []
         
         for doc in docs:
             if hasattr(doc, 'page_content'):
                 context_texts.append(doc.page_content)
         
+        print(f"추출된 컨텍스트 수: {len(context_texts)}")
+        if context_texts:
+            print(f"첫 번째 컨텍스트 미리보기: {context_texts[0][:200]}...")
+        
         return context_texts
 
 
-class RAGASEvaluator:
+class RAGASEvaluator:  # RAGAS 평가 실행 및 결과 파싱 클래스
     """RAGAS 평가 실행 클래스"""
     
     METRICS = [faithfulness, answer_relevancy]
@@ -83,9 +88,20 @@ class RAGASEvaluator:
     def evaluate_dataset(dataset: Dataset) -> EvaluationResult:
         """데이터셋에 대한 RAGAS 평가 실행"""
         print("RAGAS 평가 실행 중...")
+        print(f"데이터셋 구조: {dataset}")
+        print(f"데이터셋 컬럼: {dataset.column_names}")
+        print(f"데이터셋 크기: {len(dataset)}")
+        
+        # 데이터셋 구조 확인
+        if len(dataset) > 0:
+            print(f"첫 번째 질문: {dataset['question'][0]}")
+            print(f"첫 번째 답변: {dataset['answer'][0][:200]}...")
+            print(f"첫 번째 컨텍스트 수: {len(dataset['contexts'][0])}")
         
         # 평가 실행
         results = evaluate(dataset, RAGASEvaluator.METRICS)
+        
+        print(f"RAGAS 원본 결과: {results}")
         
         # 결과 파싱
         return RAGASEvaluator._parse_results(results)
@@ -94,27 +110,53 @@ class RAGASEvaluator:
     def _parse_results(results: Any) -> EvaluationResult:
         """RAGAS 결과 파싱"""
         try:
-            # 결과를 딕셔너리로 변환
-            results_dict = {}
-            for metric in RAGASEvaluator.METRICS:
-                metric_name = metric.__name__ if hasattr(metric, '__name__') else str(metric)
-                
-                if hasattr(results, metric_name):
-                    results_dict[metric_name] = getattr(results, metric_name)
-                elif isinstance(results, dict) and metric_name in results:
-                    results_dict[metric_name] = results[metric_name]
+            print(f"결과 타입: {type(results)}")
+            print(f"결과 속성들: {dir(results)}")
             
-            # 점수 추출
-            faithfulness_score = results_dict.get('faithfulness', 0.0)
-            answer_relevancy_score = results_dict.get('answer_relevancy', 0.0)
-            
+            faithfulness_score = None
+            answer_relevancy_score = None
+
+            # 1. scores
+            if hasattr(results, 'scores') and isinstance(results.scores, dict):
+                scores = results.scores
+                print(f"scores 속성: {scores}")
+                f = scores.get('faithfulness', 0.0)
+                a = scores.get('answer_relevancy', 0.0)
+                faithfulness_score = float(f[0]) if isinstance(f, list) else float(f)
+                answer_relevancy_score = float(a[0]) if isinstance(a, list) else float(a)
+                print(f"[scores] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
+
+            # 2. _scores_dict
+            if (faithfulness_score is None or answer_relevancy_score is None) and hasattr(results, '_scores_dict'):
+                scores_dict = results._scores_dict
+                print(f"_scores_dict 속성: {scores_dict}")
+                f = scores_dict.get('faithfulness', 0.0)
+                a = scores_dict.get('answer_relevancy', 0.0)
+                faithfulness_score = float(f[0]) if isinstance(f, list) else float(f)
+                answer_relevancy_score = float(a[0]) if isinstance(a, list) else float(a)
+                print(f"[_scores_dict] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
+
+            # 3. dict
+            if (faithfulness_score is None or answer_relevancy_score is None) and isinstance(results, dict):
+                f = results.get('faithfulness', 0.0)
+                a = results.get('answer_relevancy', 0.0)
+                faithfulness_score = float(f[0]) if isinstance(f, list) else float(f)
+                answer_relevancy_score = float(a[0]) if isinstance(a, list) else float(a)
+                print(f"[dict] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
+
+            # 4. 직접 속성
+            if (faithfulness_score is None or answer_relevancy_score is None):
+                faithfulness_score = float(getattr(results, 'faithfulness', 0.0))
+                answer_relevancy_score = float(getattr(results, 'answer_relevancy', 0.0))
+                print(f"[attr] faithfulness: {faithfulness_score}, answer_relevancy: {answer_relevancy_score}")
+
             # 평균 점수 계산
             scores = [faithfulness_score, answer_relevancy_score]
             average_score = sum(scores) / len(scores)
-            
+
             # 결과 해석
             interpretation = RAGASEvaluator._interpret_score(average_score)
-            
+
             return EvaluationResult(
                 faithfulness_score=faithfulness_score,
                 answer_relevancy_score=answer_relevancy_score,
@@ -122,9 +164,11 @@ class RAGASEvaluator:
                 interpretation=interpretation,
                 raw_results=results
             )
-            
+
         except Exception as e:
             print(f"결과 처리 중 오류: {e}")
+            import traceback
+            traceback.print_exc()
             print("원본 결과:", results)
             
             # 기본값 반환
@@ -147,7 +191,7 @@ class RAGASEvaluator:
             return "🔴 개선 필요: 답변의 품질을 향상시킬 필요가 있습니다."
 
 
-class ResultPrinter:
+class ResultPrinter:  # 평가 결과(점수, 해석 등) 출력 클래스
     """결과 출력 클래스"""
     
     @staticmethod
@@ -165,7 +209,7 @@ class ResultPrinter:
         print(answer)
 
 
-class RAGEvaluator:
+class RAGEvaluator:  # 전체 평가 파이프라인 관리 클래스
     """RAG 시스템 성능 평가 메인 클래스"""
     
     def __init__(self):
@@ -210,10 +254,12 @@ class RAGEvaluator:
             
         except Exception as e:
             print(f"평가 중 오류 발생: {e}")
+            import traceback
+            traceback.print_exc()
             return None
 
 
-class InteractiveEvaluator:
+class InteractiveEvaluator:  # CLI에서 실시간 평가 인터페이스 제공 클래스
     """대화형 평가 인터페이스"""
     
     def __init__(self):
@@ -265,7 +311,7 @@ class InteractiveEvaluator:
             return None
 
 
-def main():
+def main():  # 평가 CLI 실행 함수
     """메인 실행 함수"""
     evaluator = InteractiveEvaluator()
     evaluator.run()
