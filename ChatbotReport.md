@@ -256,7 +256,7 @@ end
 
 %% 하단 흐름
 subgraph 단계2[🧠 Prompt & LLM Inference]
-    flowchart LR
+    direction LR
       D[RunnableMap:\ncards_block: format_cards x.cards]
       E[RunnableLambda:\nmake_prompt x]
       F[LLM\n e.g., GPT-4]
