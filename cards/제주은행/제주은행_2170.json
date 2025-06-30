@@ -1,0 +1,49 @@
+{
+  "card_id": 2170,
+  "card_url": "https://www.card-gorilla.com/card/detail/2170",
+  "card_name": "부자되세요 더마일리지카드",
+  "issuer": "제주은행",
+  "inactive": false,
+  "brands": [
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "온라인쇼핑",
+      "summary": "5개 온라인몰 5% 청구 할인",
+      "details": [
+        "5개 온라인몰 5% 청구 할인"
+      ]
+    },
+    {
+      "type": "통신",
+      "summary": "이동통신요금 3% 청구 할인",
+      "details": []
+    },
+    {
+      "type": "대한항공",
+      "summary": "대한항공 스카이패스 마일리지 적립 서비스",
+      "details": []
+    },
+    {
+      "type": "영화",
+      "summary": "영화관 최대 3천원 청구 할인",
+      "details": []
+    },
+    {
+      "type": "푸드",
+      "summary": "패밀리레스토랑 할인 커피, 음료 이용액 할인",
+      "details": []
+    }
+  ],
+  "caution": [
+    "<서비스 제공 조건 안내>",
+    "<기타 사항>"
+  ]
+}

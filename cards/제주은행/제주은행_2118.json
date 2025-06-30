@@ -1,0 +1,52 @@
+{
+  "card_id": 2118,
+  "card_url": "https://www.card-gorilla.com/card/detail/2118",
+  "card_name": "아시아나 마일리지카드",
+  "issuer": "제주은행",
+  "inactive": false,
+  "brands": [
+    "VISA"
+  ],
+  "annual_fee": {
+    "domestic": "해외겸용 15,000원",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "아시아나항공",
+      "summary": "일시불 및 할부 매출액 1,000원당 1마일 적립",
+      "details": []
+    },
+    {
+      "type": "주유소",
+      "summary": "SK주유소 및 LPG충전소 리터당 60원 청구 할인",
+      "details": []
+    },
+    {
+      "type": "영화",
+      "summary": "영화관 1,500원 ~ 3,000원 청구 할인",
+      "details": []
+    },
+    {
+      "type": "푸드",
+      "summary": "커피전문점 이용금액의 10% 청구할인 패밀리레스토랑 20% 청구 할인",
+      "details": []
+    },
+    {
+      "type": "테마파크",
+      "summary": "롯데월드 이용 금액 50% 청구 할인",
+      "details": []
+    },
+    {
+      "type": "기타",
+      "summary": "자동화기기, 전자금융(인터넷뱅킹, 텔레뱅킹, 모바일뱅킹) 이용수수료 면제",
+      "details": []
+    }
+  ],
+  "caution": [
+    "<이용실적 기준 및 제외 대상>",
+    "<기타 사항>"
+  ]
+}

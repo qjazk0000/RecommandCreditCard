@@ -1,0 +1,47 @@
+{
+  "card_id": 1392,
+  "card_url": "https://www.card-gorilla.com/card/detail/1392",
+  "card_name": "메가쇼핑체크카드",
+  "issuer": "BNK부산은행",
+  "inactive": false,
+  "brands": [],
+  "annual_fee": {
+    "domestic": "국내전용 없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "주유",
+      "summary": "전국 주유소 1.2% 캐시백",
+      "details": []
+    },
+    {
+      "type": "카페/디저트",
+      "summary": "커피&맥도날드 5% 할인",
+      "details": []
+    },
+    {
+      "type": "마트/편의점",
+      "summary": "메가마트 3~7% 캐시백",
+      "details": []
+    },
+    {
+      "type": "쇼핑",
+      "summary": "쇼핑 채널 5% 캐시백",
+      "details": []
+    },
+    {
+      "type": "영화",
+      "summary": "영화관 예매 시 2천원 캐시백",
+      "details": []
+    },
+    {
+      "type": "기타",
+      "summary": "농심계열사 할인 그린서비스",
+      "details": []
+    }
+  ],
+  "caution": []
+}

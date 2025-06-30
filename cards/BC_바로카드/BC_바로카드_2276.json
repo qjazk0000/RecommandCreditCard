@@ -1,0 +1,29 @@
+{
+  "card_id": 2276,
+  "card_url": "https://www.card-gorilla.com/card/detail/2276",
+  "card_name": "Indi-visual 카드(임블리카드)",
+  "issuer": "BC 바로카드",
+  "inactive": false,
+  "brands": [],
+  "annual_fee": {
+    "domestic": "",
+    "international": ""
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "",
+      "summary": "\"본 상품은 카드사에서 제공하는 부가서비스가 없습니다.\"",
+      "details": []
+    },
+    {
+      "type": "",
+      "summary": "꼭 확인하세요!",
+      "details": []
+    }
+  ],
+  "caution": [
+    "유의사항"
+  ]
+}

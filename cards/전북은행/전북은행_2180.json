@@ -1,0 +1,52 @@
+{
+  "card_id": 2180,
+  "card_url": "https://www.card-gorilla.com/card/detail/2180",
+  "card_name": "1st TRIPLE Platinum 카드",
+  "issuer": "전북은행",
+  "inactive": false,
+  "brands": [],
+  "annual_fee": {
+    "domestic": "국내전용 30,000원",
+    "international": "해외겸용 33.000원"
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "선택형",
+      "summary": "전월실적, 한도제한없이 선택 타입 업종 최대 1% 적립 - SPECIAL 적립 (1.5%) / TOP 적립 (1.0%)",
+      "details": []
+    },
+    {
+      "type": "적립",
+      "summary": "JUST LIFE 적립서비스",
+      "details": [
+        "1. 후불교통(버스,지하철) 이용요금 5% J머니 적립",
+        "2. 주요 카페 이용시 5% J머니 적립",
+        "3. 주요 베이커리 이용시 5% J머니적립",
+        "4. 전국 영화관 3천원 J머니 적립",
+        "※ Triple 적립서비스와 중복 적립 되지 않습니다."
+      ]
+    },
+    {
+      "type": "프리미엄 서비스",
+      "summary": "Mastercard Platinum 서비스",
+      "details": [
+        "마스터카드 플래티늄 등급에 해당되는 서비스 제공"
+      ]
+    }
+  ],
+  "caution": [
+    "※ 후불교통카드 서비스",
+    "※ 서비스 제공조건",
+    "1. Triple 적립서비스 제공조건",
+    "적립 제외 대상",
+    "2. JUST LIFE 적립서비스 제공조건",
+    "전월실적 10만원 이상 시 제공",
+    "전월실적기준",
+    "전월실적 제외 대상",
+    "3. 서비스 공통 유의사항",
+    "4. 서비스 상세 업종 구분",
+    "※ 오프라인 가맹점 기준 적용 (온라인쇼핑 제외)"
+  ]
+}

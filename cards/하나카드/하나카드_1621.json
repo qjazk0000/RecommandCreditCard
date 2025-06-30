@@ -1,0 +1,22 @@
+{
+  "card_id": 1621,
+  "card_url": "https://www.card-gorilla.com/card/detail/1621",
+  "card_name": "내(內) 카드",
+  "issuer": "하나카드",
+  "inactive": "신규발급이 중단된 카드입니다.",
+  "brands": [],
+  "annual_fee": {
+    "domestic": "국내전용 없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "캐시백",
+      "summary": "이용금액의 0.3% 캐시백",
+      "details": []
+    }
+  ],
+  "caution": []
+}

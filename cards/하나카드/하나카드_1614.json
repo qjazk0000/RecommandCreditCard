@@ -1,0 +1,43 @@
+{
+  "card_id": 1614,
+  "card_url": "https://www.card-gorilla.com/card/detail/1614",
+  "card_name": "쿠쿠 프리멤버쉽 하나카드",
+  "issuer": "하나카드",
+  "inactive": false,
+  "brands": [
+    "Mastercard",
+    "JCB"
+  ],
+  "annual_fee": {
+    "domestic": "해외겸용 12,000원",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "렌탈",
+      "summary": "쿠쿠 렌탈요금 자동이체 시 월 1만3천원 청구할인",
+      "details": []
+    },
+    {
+      "type": "대형마트",
+      "summary": "이마트, 이마트 트레이더스, 홈플러스, 롯데마트 이용금액 3% 청구할인",
+      "details": []
+    },
+    {
+      "type": "카페",
+      "summary": "커피빈 이용금액 10% 청구할인",
+      "details": []
+    }
+  ],
+  "caution": [
+    "[서비스 제공조건]",
+    "[연회비 청구 및 반환기준]",
+    "[부가서비스 유지 및 변경안내]",
+    "[해외결제 및 기타안내]",
+    "해외 이용시(해외사이트 거래 포함) 미화(USD)기준 거래 금액에 접수일의 하나은행 최초고시 전신환매도율을 적용한 후, 국제브랜드사가 부과하는 국제브랜드수수료(One Way(JCB)1.0%)와 하나카드가 부과하는 해외서비스수수료(신용카드 0.2%)를 포함하여 원화로 청구됩니다.",
+    "해외 이용시 청구금액 산출방법",
+    "해외 이용 시 청구금액 = (거래미화금액 X 전신환 매도율¹) + 국제브랜드수수료² + 해외서비스수수료³"
+  ]
+}

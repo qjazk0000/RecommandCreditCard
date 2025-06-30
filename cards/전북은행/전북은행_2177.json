@@ -1,0 +1,36 @@
+{
+  "card_id": 2177,
+  "card_url": "https://www.card-gorilla.com/card/detail/2177",
+  "card_name": "1st Link On 카드",
+  "issuer": "전북은행",
+  "inactive": false,
+  "brands": [
+    "BC",
+    "Mastercard"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 19,000원",
+    "international": "해외겸용 20,000원"
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "적립",
+      "summary": "전주 삼색 서비스 월 최대 1만원 적립",
+      "details": []
+    },
+    {
+      "type": "적립",
+      "summary": "온라인에서 결제 시 5% 청구할인",
+      "details": [
+        "온라인에서 결제 시 5% 청구할인",
+        "[온라인 결제 제공 조건 안내]",
+        "월간 통합 할인 한도",
+        "전월실적 50만원 이상: 3천원",
+        "전월실적 100만원 이상: 7천원"
+      ]
+    }
+  ],
+  "caution": []
+}

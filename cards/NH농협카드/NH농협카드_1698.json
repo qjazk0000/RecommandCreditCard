@@ -1,0 +1,61 @@
+{
+  "card_id": 1698,
+  "card_url": "https://www.card-gorilla.com/card/detail/1698",
+  "card_name": "中國 通(중국통)체크카드",
+  "issuer": "NH농협카드",
+  "inactive": false,
+  "brands": [
+    "BC",
+    "UnionPay"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 없음",
+    "international": "해외겸용 없음"
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "해외",
+      "summary": "중국 내 서비스",
+      "details": [
+        "중국 내 서비스",
+        "해외이용시 비밀번호 사용안내",
+        "선승인 거래(Deposit) 가맹점 사용불가 안내"
+      ]
+    },
+    {
+      "type": "BC TOP",
+      "summary": "국내 신판 이용액의 0.1% TOP포인트 적립",
+      "details": [
+        "국내 신판 이용액의 0.1% TOP 포인트 적립"
+      ]
+    },
+    {
+      "type": "OTT/영화/문화",
+      "summary": "인터넷 영화 예매 2,000원 정액할인 YES24, 교보문고, 영풍문고 2,000원 정액 할인(인터넷 결제시만 할인)",
+      "details": [
+        "인터넷 영화 예매 2,000원 정액할인",
+        "부가서비스 신청/변경 → 부가서비스 → 영화예매를 통해 예매 시 적용 또는 맥스무비, 인터파크, 예스24에서 예매가능",
+        "월 2회, 연 12회 제공",
+        "토익응시료 2,000원 정액할인",
+        "YES24, 교보문고, 영풍문고 2,000원 정액 할인(인터넷 결제시만 할인)"
+      ]
+    },
+    {
+      "type": "면세점",
+      "summary": "국내면세점 5~15% 할인쿠폰 제공",
+      "details": [
+        "국내면세점 5~15% 할인쿠폰 제공"
+      ]
+    },
+    {
+      "type": "카페",
+      "summary": "스타벅스, 커피빈 10% 할인",
+      "details": [
+        "스타벅스(사이렌오더 포함), 커피빈 10% 할인"
+      ]
+    }
+  ],
+  "caution": []
+}

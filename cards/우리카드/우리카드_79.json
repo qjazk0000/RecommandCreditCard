@@ -1,0 +1,22 @@
+{
+  "card_id": 79,
+  "card_url": "https://www.card-gorilla.com/card/detail/79",
+  "card_name": "그랑블루Ⅱ카드",
+  "issuer": "우리카드",
+  "inactive": "신규발급이 중단된 카드입니다.",
+  "brands": [
+    "VISA",
+    "Mastercard",
+    "UnionPay"
+  ],
+  "annual_fee": {
+    "domestic": "해외겸용 100,000원",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [],
+  "caution": [
+    "※ 해당 카드는 신규 발급이 중단되었습니다. 자세한 혜택은 카드사 홈페이지를 통해 확인 부탁드립니다."
+  ]
+}

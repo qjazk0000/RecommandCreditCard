@@ -1,0 +1,41 @@
+{
+  "card_id": 1323,
+  "card_url": "https://www.card-gorilla.com/card/detail/1323",
+  "card_name": "카카오페이 체크카드",
+  "issuer": "BNK부산은행",
+  "inactive": false,
+  "brands": [
+    "BC"
+  ],
+  "annual_fee": {
+    "domestic": "국내전용 1,000원",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "쇼핑",
+      "summary": "온/오프라인 쇼핑 할인",
+      "details": [
+        "온라인 쇼핑몰 할인",
+        "G마켓, 옥션, 11번가, 쿠팡, 위메프, 티몬 10%할인",
+        "통합 월 2회 한도",
+        "오프라인 쇼핑몰 할인",
+        "편의점 업종, 올리브영, 랄라블라, 다이소 5%할인",
+        "통합 월 2회 할인"
+      ]
+    },
+    {
+      "type": "카카오페이",
+      "summary": "카카오페이 15% 청구할인",
+      "details": [
+        "카카오페이 할인",
+        "다양한 가맹점에서 카카오페이 결제수단을 이용하여 결제 시 15% 청구할인",
+        "모바일/PC/현장결제 모두 가능",
+        "월 2회 한도"
+      ]
+    }
+  ],
+  "caution": []
+}

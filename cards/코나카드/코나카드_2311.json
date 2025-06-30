@@ -1,0 +1,55 @@
+{
+  "card_id": 2311,
+  "card_url": "https://www.card-gorilla.com/card/detail/2311",
+  "card_name": "럭키 더블카드",
+  "issuer": "코나카드",
+  "inactive": false,
+  "brands": [],
+  "annual_fee": {
+    "domestic": "국내전용 없음",
+    "international": null
+  },
+  "required_spending": null,
+  "required_spending_amount": null,
+  "benefits": [
+    {
+      "type": "혜택 프로모션",
+      "summary": "1만원 이상 결제마다 럭키권 2장씩 발급",
+      "details": [
+        "1만원 이상 결제마다 4개 행운번호 럭키권 2장씩 발급",
+        "기본 혜택",
+        "실적없이 할인 혜택 제공",
+        "유튜브 '럭키로코쇼' 통해 확인 가능"
+      ]
+    },
+    {
+      "type": "카페/디저트",
+      "summary": "커피빈 15% 할인",
+      "details": [
+        "커피빈 15% 할인",
+        "기본 혜택",
+        "실적없이 할인 혜택 제공"
+      ]
+    },
+    {
+      "type": "마트/편의점",
+      "summary": "GS25, 세븐일레븐 10% 캐시백",
+      "details": [
+        "GS25, 세븐일레븐 10% 캐시백",
+        "스페셜 혜택",
+        "당월 20만원 이상 충전 또는 전월 20만원 이상 결제한 회원"
+      ]
+    },
+    {
+      "type": "기타",
+      "summary": "단골 매장 3% 캐시백",
+      "details": [
+        "코나 애플리케이션 내 단골 매장 등록을 통해 3곳의 매장에서 3% 캐시백 제공",
+        "스페셜 혜택",
+        "1회 이상 방문한 매장 단골 매장으로 등록 가능",
+        "당월 20만원 이상 충전 또는 전월 20만원 이상 결제한 회원\n*단골매장은 6개월 이내 변경 불가"
+      ]
+    }
+  ],
+  "caution": []
+}
