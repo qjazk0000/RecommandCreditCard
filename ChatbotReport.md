@@ -161,7 +161,11 @@ RAG 시스템의 성능은 다음과 같은 주요 평가 지표로 측정합니
 - **컨텍스트 정밀도 (context_precision)**: 검색된 컨텍스트 중 실제로 정답에 필요한 정보만을 얼마나 정확히 포함하고 있는지 평가합니다. 1.0에 가까울수록 불필요한 정보 없이 정확함을 의미합니다.
 - **의미 유사도 (semantic_similarity)**: 생성된 답변과 정답(근거) 간의 의미적 유사도를 측정합니다. 값이 높을수록 두 텍스트가 의미적으로 비슷함을 의미합니다.
 
+<<<<<<< HEAD
 #### 최신 RAGAS 평가 결과  
+=======
+#### 최신 RAGAS 평가 결과 (2025년 6월 기준)
+>>>>>>> main
 
 **평가 환경:**
 - 평가 방법: RAGAS (RAG Assessment) 프레임워크
@@ -241,3 +245,33 @@ flowchart LR
     style E fill:#ffe4e4,stroke:#cc0000
     style K fill:#fff2cc,stroke:#ffaa00
 ```
+<<<<<<< HEAD
+=======
+
+```mermaid
+flowchart TD
+
+%% 상단 흐름
+subgraph 단계1[🧩 Input & Vector Search]
+    direction LR
+    A[Start:\nRunnablePassthrough] --> B{{Split Input}}
+    B --> B1[query:\nRunnablePassthrough]
+    B --> B2[vector:\nexpand_and_embed]
+    B1 & B2 --> C[RunnableMap:\nquery: x.query,\ncards: search_similar_cards_with_filter]
+end
+
+%% 하단 흐름
+subgraph 단계2[🧠 Prompt & LLM Inference]
+    direction LR
+      D[RunnableMap:\ncards_block: format_cards x.cards]
+      E[RunnableLambda:\nmake_prompt x]
+      F[LLM\n e.g., GPT-4]
+      G[Output Parser]
+      H[Final Output]
+    D --> E --> F --> G --> H
+end
+
+C --> D
+
+```
+>>>>>>> main
