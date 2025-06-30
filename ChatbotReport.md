@@ -219,3 +219,25 @@ RAG 시스템의 성능은 다음과 같은 주요 평가 지표로 측정합니
 현재 시스템은 실사용에 충분한 수준의 성능을 보이며, 특히 정보 검색과 의미적 일관성 측면에서 우수한 성능을 발휘합니다. 다만, 더 정확한 근거 기반 답변을 위해 위의 개선 방안을 단계적으로 적용할 것을 권장합니다.
 
 ---
+
+```mermaid
+
+flowchart LR
+    A[크롤링<br>CreditCardCrawling.py] --> B[카드 JSON 저장<br>카드고릴라에서 수집]
+    B --> C[임베딩 처리<br>EmbeddingCardInfo.py]
+    C --> D[FAISS DB 생성<br>카드 혜택/유의사항 기반]
+
+    D --> E[카드 추천 시스템 초기화<br>RecommendCard.py]
+    E --> F[사용자 쿼리 입력]
+    F --> G[유사도 기반 검색<br>FAISS]
+    G --> H[카드 필터링<br>브랜드/연회비 등]
+    H --> I[카드 문서 포맷팅]
+    I --> J[프롬프트 구성<br>PromptBuilder]
+    J --> K[LLM 응답 생성<br>ChatGPT API]
+    K --> L[추천 결과 출력<br>Top 3 카드]
+
+    style A fill:#dfefff,stroke:#0077cc
+    style C fill:#dfffdc,stroke:#339933
+    style E fill:#ffe4e4,stroke:#cc0000
+    style K fill:#fff2cc,stroke:#ffaa00
+```
