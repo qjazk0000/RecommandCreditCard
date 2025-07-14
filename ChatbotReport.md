@@ -23,6 +23,57 @@
 - 사용자 신뢰도 확보를 위해 카드 상세 페이지 링크와 혜택 출처 정보를 함께 제공합니다.  
 - 누구나 쉽게 접근 가능한 웹 인터페이스와 챗봇 구조를 통해 카드 정보 탐색의 진입 장벽을 낮추고, 소비자 선택을 돕습니다.
 
+## 시스템 아키텍처
+
+### 📁 모듈화된 프로젝트 구조
+
+```
+beomseok/
+├── crawling/                    # 데이터 수집 모듈
+│   ├── CreditCardCrawling.py   # 카드 정보 크롤링
+│   ├── cards/                  # 크롤링된 카드 JSON 파일들
+│   └── __init__.py
+├── embedding/                   # 임베딩 처리 모듈
+│   ├── EmbeddingCardInfo.py    # 카드 정보 임베딩 처리
+│   ├── faiss_card_db/          # FAISS 벡터 데이터베이스
+│   └── __init__.py
+├── recommendation/              # 추천 시스템 모듈
+│   ├── model_manager.py        # 임베딩 모델, LLM, FAISS 로딩
+│   ├── query_filter.py         # 사용자 쿼리에서 필터 추출 및 문서 필터링
+│   ├── formatter.py            # 문서 → 프롬프트 입력 변환
+│   ├── prompt_builder.py       # 프롬프트 템플릿만 관리
+│   ├── recommender.py          # RAG 체인 구성 및 실행
+│   ├── example_usage.py        # 사용 예제
+│   └── __init__.py
+├── evaluation/                  # 평가 모듈
+│   ├── RAG_Evaluation.py       # RAG 시스템 성능 평가
+│   ├── RAG_Evaluation_Report.py # 평가 결과 보고서 생성
+│   ├── reports/                # 평가 결과 리포트들
+│   └── __init__.py
+├── test.py                     # CLI 인터페이스 (메인 실행 파일)
+└── ChatbotReport.md            # 프로젝트 문서
+```
+
+### 🔧 모듈별 역할
+
+#### 1. crawling/ - 데이터 수집
+- **CreditCardCrawling.py**: 카드 고릴라에서 카드 정보 크롤링
+- **cards/**: 크롤링된 카드 JSON 파일 저장소
+
+#### 2. embedding/ - 임베딩 처리
+- **EmbeddingCardInfo.py**: 카드 JSON → 벡터 임베딩 및 FAISS DB 저장
+- **faiss_card_db/**: FAISS 벡터 데이터베이스
+
+#### 3. recommendation/ - 추천 시스템
+- **model_manager.py**: 임베딩 모델, LLM, FAISS 로딩 및 관리
+- **query_filter.py**: 사용자 쿼리에서 필터 조건 추출 및 문서 필터링
+- **formatter.py**: 검색된 문서를 프롬프트용으로 포맷팅
+- **prompt_builder.py**: LLM 프롬프트 템플릿 관리
+- **recommender.py**: RAG 체인 구성 및 실행 (메인 시스템)
+
+#### 4. evaluation/ - 성능 평가
+- **RAG_Evaluation.py**: RAGAS 기반 성능 평가
+- **RAG_Evaluation_Report.py**: 평가 결과 보고서 생성
 
 ---
 
@@ -67,9 +118,6 @@
 |------------|--------------------|------------------|------------------|
 | `cautions` | 유의사항 텍스트 목록 | List[String]     | "유의사항" 텍스트 포함 여부 기반 추출 |
 
-
----
-
 ### 2) 데이터 임베딩
 
 카드 JSON 파일들을 LangChain의 `Document` 객체로 변환하여, 카드별로 다양한 정보를 구조화해 임베딩합니다.
@@ -100,42 +148,43 @@
   카드 JSON 파일 수집 → Document 변환 → 임베딩 → FAISS 저장까지  
   전체 파이프라인이 자동화되어, 신규 데이터 추가/갱신도 쉽게 처리 가능
 
+### 3) 추천 시스템 (RAG 체인)
 
----
-
-**요약:**  
-카드별로 다양한 정보를 세분화하여 Document로 임베딩하고,  
-KoSimCSE 임베딩 모델과 FAISS 벡터DB를 활용해  
-검색·추천에 최적화된 데이터 구조를 구축하였습니다.
-
----
-
-### 3) 체인 구성
-
-신용카드 추천 RAG 파이프라인은 LangChain의 Runnable 체인을 활용하여 다음과 같이 구성됩니다.
+신용카드 추천 RAG 파이프라인은 모듈화된 구조로 다음과 같이 구성됩니다:
 
 ```python
+# recommendation/recommender.py
 self.rag_chain = (
     RunnableLambda(self._retrieve_and_filter_docs)
     | RunnableLambda(self._format_docs_for_prompt)
     | PromptBuilder.create_recommendation_prompt()
     | self.model_manager.llm
+    | StrOutputParser()
 )
 ```
 
-#### 각 단계 설명
+#### 모듈별 역할
 
-1. **문서 검색 및 필터링**  
-   - `self._retrieve_and_filter_docs`: 사용자의 질문(query)에 대해 FAISS 벡터DB에서 관련 카드 문서를 검색하고, 카드사/혜택 등 메타데이터 기반으로 추가 필터링을 수행합니다.
+1. **model_manager.py** - 모델 관리
+   - 임베딩 모델 (KoSimCSE) 초기화
+   - LLM (OpenAI GPT-4) 초기화
+   - FAISS 벡터DB 로딩
 
-2. **문서 포맷팅**  
-   - `self._format_docs_for_prompt`: 검색된 카드 문서들을 LLM 프롬프트에 적합한 형태(카드명, 혜택, 유의사항 등 구조화)로 가공합니다.
+2. **query_filter.py** - 쿼리 필터링
+   - 사용자 쿼리에서 필터 조건 추출 (카드사, 브랜드, 연회비 등)
+   - 메타데이터 기반 문서 필터링
 
-3. **프롬프트 생성**  
-   - `PromptBuilder.create_recommendation_prompt()`: 시스템 프롬프트와 사용자 질문, 카드 정보(문서)를 결합하여 LLM에 입력할 최종 프롬프트를 생성합니다.
+3. **formatter.py** - 문서 포맷팅
+   - 검색된 카드 문서를 프롬프트용으로 변환
+   - 카드 정보 구조화
 
-4. **LLM 응답 생성**  
-   - `self.model_manager.llm`: OpenAI GPT-4 등 LLM이 프롬프트를 받아 최적의 카드 추천 답변을 생성합니다.
+4. **prompt_builder.py** - 프롬프트 관리
+   - 시스템 프롬프트 템플릿 생성
+   - 사용자 질문과 카드 정보 결합
+
+5. **recommender.py** - RAG 체인 실행
+   - 전체 RAG 파이프라인 구성 및 실행
+   - 싱글톤 패턴으로 시스템 인스턴스 관리
 
 #### 체인 전체 흐름
 
@@ -146,12 +195,21 @@ self.rag_chain = (
 → LLM을 통한 답변 생성  
 → 최종 추천 결과 반환
 
-이렇게 설계된 rag_chain은 각 단계가 독립적으로 모듈화되어 있어, 검색/포맷/프롬프트/생성 모델을 유연하게 교체하거나 확장할 수 있습니다.
+### 4) CLI 인터페이스
 
+**test.py**에서 사용자 친화적인 CLI 인터페이스를 제공합니다:
 
----
+```python
+# 사용 예시
+python test.py
 
-### 4) RAG 성능 평가
+# 대화형 인터페이스
+사용자 질문을 입력하세요 (종료: quit): 주유 혜택이 많은 카드 추천해줘
+사용자 질문을 입력하세요 (종료: quit): 신한카드 중에서 외식 혜택 좋은 카드
+사용자 질문을 입력하세요 (종료: quit): 연회비 5만원 이하 카드 추천
+```
+
+### 5) RAG 성능 평가
 
 RAG 시스템의 성능은 다음과 같은 주요 평가 지표로 측정합니다:
 
@@ -197,6 +255,7 @@ RAG 시스템의 성능은 다음과 같은 주요 평가 지표로 측정합니
 1. **검색 성능 우수**: FAISS 벡터DB와 KoSimCSE 임베딩 모델의 조합으로 관련 정보 검색이 매우 정확함
 2. **의미적 일관성**: 생성된 답변이 참조 답변과 높은 의미적 유사도를 보임
 3. **정보 완성도**: 필요한 모든 정보를 빠짐없이 검색하여 제공
+4. **모듈화된 구조**: 각 기능이 독립적인 모듈로 분리되어 유지보수성과 확장성이 우수함
 
 **개선 방안:**
 1. **프롬프트 엔지니어링 개선**: 
@@ -216,24 +275,62 @@ RAG 시스템의 성능은 다음과 같은 주요 평가 지표로 측정합니
    - 사용자 피드백 수집 및 반영 시스템
 
 **실사용 적합성:**
-현재 시스템은 실사용에 충분한 수준의 성능을 보이며, 특히 정보 검색과 의미적 일관성 측면에서 우수한 성능을 발휘합니다. 다만, 더 정확한 근거 기반 답변을 위해 위의 개선 방안을 단계적으로 적용할 것을 권장합니다.
+현재 시스템은 실사용에 충분한 수준의 성능을 보이며, 특히 정보 검색과 의미적 일관성 측면에서 우수한 성능을 발휘합니다. 모듈화된 구조로 인해 각 기능의 독립적인 개선과 확장이 용이하며, 위의 개선 방안을 단계적으로 적용할 것을 권장합니다.
+
+---
+
+## 사용 방법
+
+### 1. 시스템 실행
+
+```bash
+# CLI 인터페이스 실행
+python test.py
+
+# 또는 추천 시스템만 사용
+from recommendation.recommender import get_recommendation_system
+system = get_recommendation_system()
+result = system.recommend_cards("주유 혜택이 많은 카드 추천해줘")
+```
+
+### 2. 모듈별 실행
+
+```bash
+# 크롤링 실행
+cd crawling
+python CreditCardCrawling.py
+
+# 임베딩 실행
+cd embedding
+python EmbeddingCardInfo.py
+
+# 평가 실행
+cd evaluation
+python RAG_Evaluation.py
+```
+
+### 3. 필터링 옵션
+
+- **카드사 필터링**: "신한카드 중에서 외식 혜택 좋은 카드"
+- **카드명 필터링**: "삼성 iD ON 카드 추천"
+- **연회비 필터링**: "연회비 5만원 이하 카드 추천"
+- **브랜드 필터링**: "VISA 브랜드 카드 중에서 온라인 쇼핑 혜택 좋은 카드"
 
 ---
 
 ```mermaid
-
 flowchart LR
-    A[크롤링<br>CreditCardCrawling.py] --> B[카드 JSON 저장<br>카드고릴라에서 수집]
-    B --> C[임베딩 처리<br>EmbeddingCardInfo.py]
-    C --> D[FAISS DB 생성<br>카드 혜택/유의사항 기반]
+    A[크롤링<br>crawling/CreditCardCrawling.py] --> B[카드 JSON 저장<br>crawling/cards/]
+    B --> C[임베딩 처리<br>embedding/EmbeddingCardInfo.py]
+    C --> D[FAISS DB 생성<br>embedding/faiss_card_db/]
 
-    D --> E[카드 추천 시스템 초기화<br>RecommendCard.py]
-    E --> F[사용자 쿼리 입력]
+    D --> E[추천 시스템 초기화<br>recommendation/recommender.py]
+    E --> F[사용자 쿼리 입력<br>test.py]
     F --> G[유사도 기반 검색<br>FAISS]
-    G --> H[카드 필터링<br>브랜드/연회비 등]
-    H --> I[카드 문서 포맷팅]
-    I --> J[프롬프트 구성<br>PromptBuilder]
-    J --> K[LLM 응답 생성<br>ChatGPT API]
+    G --> H[카드 필터링<br>query_filter.py]
+    H --> I[카드 문서 포맷팅<br>formatter.py]
+    I --> J[프롬프트 구성<br>prompt_builder.py]
+    J --> K[LLM 응답 생성<br>GPT-4]
     K --> L[추천 결과 출력<br>Top 3 카드]
 
     style A fill:#dfefff,stroke:#0077cc
@@ -241,33 +338,3 @@ flowchart LR
     style E fill:#ffe4e4,stroke:#cc0000
     style K fill:#fff2cc,stroke:#ffaa00
 ```
-<<<<<<< HEAD
-=======
-
-```mermaid
-flowchart TD
-
-%% 상단 흐름
-subgraph 단계1[🧩 Input & Vector Search]
-    direction LR
-    A[Start:\nRunnablePassthrough] --> B{{Split Input}}
-    B --> B1[query:\nRunnablePassthrough]
-    B --> B2[vector:\nexpand_and_embed]
-    B1 & B2 --> C[RunnableMap:\nquery: x.query,\ncards: search_similar_cards_with_filter]
-end
-
-%% 하단 흐름
-subgraph 단계2[🧠 Prompt & LLM Inference]
-    direction LR
-      D[RunnableMap:\ncards_block: format_cards x.cards]
-      E[RunnableLambda:\nmake_prompt x]
-      F[LLM\n e.g., GPT-4]
-      G[Output Parser]
-      H[Final Output]
-    D --> E --> F --> G --> H
-end
-
-C --> D
-
-```
->>>>>>> main
