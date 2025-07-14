@@ -13,8 +13,10 @@ from ragas import evaluate
 from ragas.metrics import faithfulness, answer_relevancy, context_recall, context_precision, answer_similarity
 from datasets import Dataset
 
-# RecommendCard.py에서 카드 추천 시스템 import
-from RecommendCard import get_recommendation_system
+# 카드 추천 시스템 import
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from recommendation.recommender import get_recommendation_system
 
 MAX_TOKENS = 512
 
@@ -170,7 +172,7 @@ def print_synthetic_evaluation_results(dataset, results, n):
 # main 함수: 실행시간 측정 추가
 
 def main():
-    from RecommendCard import get_recommendation_system
+    # 이미 위에서 import했으므로 다시 import할 필요 없음
     start = time.time()
     recommendation_system = get_recommendation_system()
     dataset_builder = DatasetBuilder(recommendation_system)

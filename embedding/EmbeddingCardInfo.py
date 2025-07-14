@@ -14,7 +14,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 @dataclass  # 임베딩 관련 설정값을 저장하는 데이터 클래스
 class EmbeddingConfig:
     """임베딩 설정 클래스"""
-    card_folder: str = str((Path(__file__).parent / "cards").resolve())
+    card_folder: str = str((Path(__file__).parent.parent / "crawling" / "cards").resolve())
     faiss_persist_dir: str = str((Path(__file__).parent / "faiss_card_db").resolve())
     embedding_model_name: str = "BM-K/KoSimCSE-roberta-multitask"
     batch_size: int = 32
